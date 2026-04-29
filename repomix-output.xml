@@ -1,0 +1,2074 @@
+This file is a merged representation of a subset of the codebase, containing files not matching ignore patterns, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of a subset of the repository's contents that is considered the most important context.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching these patterns are excluded: owl-squirrel/data
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+barista/
+  notebook.py
+  pyproject.toml
+owl-squirrel/
+  notebook.py
+  pyproject.toml
+README.md
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="barista/notebook.py">
+# /// script
+# dependencies = [
+#     "marimo>=0.23.3",
+#     "mcp>=1",
+#     "numpy==2.4.4",
+#     "plotly==6.6.0",
+#     "pydantic>=2",
+#     "requests==2.33.1",
+#     "vegafusion==2.0.3",
+#     "vl-convert-python==1.9.0.post1",
+# ]
+# [tool.marimo.runtime]
+# auto_instantiate = false
+# ///
+
+import marimo
+
+__generated_with = "0.23.0"
+app = marimo.App(
+    width="full",
+    css_file="/usr/local/_marimo/custom.css",
+    auto_download=["html"],
+)
+
+
+@app.cell
+def _():
+    import marimo as mo
+    import numpy as np
+    import plotly.graph_objects as go
+    from plotly.subplots import make_subplots
+    import requests
+    import random
+
+    return go, make_subplots, mo, np, random
+
+
+@app.cell
+def _(mo):
+    header = mo.md(r"""
+    # ☕ Cafe Diffusion: The Blind Barista Challenge!
+    """)
+    subheader = mo.md(r"""
+    ### *A Noise-Free Manifold Projection Game based on *[arXiv:2602.18428](https://arxiv.org/abs/2602.18428).**
+
+    > *"The milk doesn't need to know how diffuse it has become. It only needs to know the shape of the secret art."*
+    """)
+
+    tool1 = mo.md(r"""
+    > **📻 Tool 1: The Barista's Guess (Old Method)**  
+    > *Manual tuning.* Guess the noise level (σ) using the radio dial. If your guess is wrong, the underlying math hits the "Jensen Gap Singularity" and the image degrades further into static.
+    """)
+
+    tool2 = mo.md(r"""
+    > **👻 Tool 2: The Geometric Method (New Method)**  
+    > *Math from [arXiv:2602.18428](https://arxiv.org/abs/2602.18428).* It ignores the noise level entirely. The steward smoothly follows the geometric gradient field back to the original art, naturally invariant to time and magnitude.
+    """)
+
+    intro = mo.vstack(
+        [
+            mo.md(
+                "#### _This notebook is formatted to work both as a vertical layout and as slides. Feel free to use either view when you play along at home!_"
+            ),
+            mo.md("---"),
+            mo.hstack(
+                [header, subheader],
+                align="center",
+                justify="center",
+                widths=[5, 4],
+                gap=2,
+            ),
+            mo.accordion(
+                {
+                    "You have two tools available to reveal the latte art": mo.vstack(
+                        [
+                            mo.md(
+                                "A rogue espresso machine just scrambled your latte art with an *unknown* amount of noise. Tune the radio dial to help the old method, watch the new method succeed automatically, and **guess the secret shape!**"
+                            ),
+                            mo.hstack(
+                                [tool1, mo.md(""), tool2],
+                                gap=2,
+                                widths=[1, 0.2, 1],
+                                align="center",
+                                justify="center",
+                            ),
+                        ]
+                    )
+                }
+            ),
+        ],
+        align="center",
+        gap=1,
+    )
+
+
+    intro
+    return tool1, tool2
+
+
+@app.cell
+def _(np):
+    def generate_art_library():
+        library = {}
+
+        # 1. Cat 🐱
+        cat = np.zeros((32, 32))
+        y, x = np.ogrid[-1:1:32j, -1:1:32j]
+        cat[(x + 0.3) ** 2 + (y - 0.4) ** 2 < 0.15**2] = 0.75
+        cat[(x - 0.3) ** 2 + (y - 0.4) ** 2 < 0.15**2] = 0.75
+        cat[
+            ((x + 0.2) ** 2 + (y - 0.4) ** 2 < 0.08**2)
+            | ((x - 0.2) ** 2 + (y - 0.4) ** 2 < 0.08**2)
+        ] = 0.12
+        cat[(x**2 + (y + 0.1) ** 2 < 0.5**2) & (y < -0.1)] = 0.75
+        cat[(abs(x) < 0.1) & (y > -0.1) & (y < 0.2)] = 0.58
+        library["Cat 🐱"] = cat
+
+        # 2. Heart ❤️
+        heart = np.zeros((32, 32))
+        y, x = np.ogrid[-1.2:1.2:32j, -1.2:1.2:32j]
+        heart[(x**2 + (y - 0.3) ** 2 - 1) ** 3 - x**2 * (y - 0.3) ** 3 < -0.3] = (
+            0.85
+        )
+        library["Heart ❤️"] = heart
+
+        # 3. Star ⭐
+        star = np.zeros((32, 32))
+        y, x = np.ogrid[-1.5:1.5:32j, -1.5:1.5:32j]
+        mask1 = abs(x) + abs(y) < 1.2
+        mask2 = abs(0.5 * x - 0.866 * y) + abs(0.866 * x + 0.5 * y) < 1.2
+        star[mask1 | mask2] = 0.8
+        library["Star ⭐"] = star
+
+        # 4. Smiley 😃
+        smiley = np.zeros((32, 32))
+        y, x = np.ogrid[-1.2:1.2:32j, -1.2:1.2:32j]
+        smiley[x**2 + y**2 < 1] = 0.7
+        smiley[
+            ((x + 0.4) ** 2 + (y - 0.3) ** 2 < 0.1**2)
+            | ((x - 0.4) ** 2 + (y - 0.3) ** 2 < 0.1**2)
+        ] = 0.1
+        smiley[
+            (x**2 + (y + 0.1) ** 2 < 0.6**2)
+            & (x**2 + (y + 0.1) ** 2 > 0.5**2)
+            & (y > -0.1)
+        ] = 0.1
+        library["Smiley 😃"] = smiley
+
+        # 5. Crescent Moon 🌙
+        moon = np.zeros((32, 32))
+        y, x = np.ogrid[-1.2:1.2:32j, -1.2:1.2:32j]
+        # Base circle minus an offset circle
+        moon[
+            (x**2 + y**2 < 0.9**2) & ((x - 0.3) ** 2 + (y + 0.2) ** 2 > 0.8**2)
+        ] = 0.8
+        library["Moon 🌙"] = moon
+
+        # 6. Target 🎯
+        target = np.zeros((32, 32))
+        y, x = np.ogrid[-1:1:32j, -1:1:32j]
+        r = np.sqrt(x**2 + y**2)
+        target[r < 0.9] = 0.3
+        target[r < 0.7] = 0.85
+        target[r < 0.5] = 0.3
+        target[r < 0.3] = 0.85
+        library["Target 🎯"] = target
+
+        # 7. Pacman ᗧ
+        pacman = np.zeros((32, 32))
+        y, x = np.ogrid[-1:1:32j, -1:1:32j]
+        r = np.sqrt(x**2 + y**2)
+        angle = np.arctan2(y, x)
+        # Full circle minus a 70-degree wedge pointing right
+        pacman[(r < 0.8) & ~((angle > -0.6) & (angle < 0.6))] = 0.85
+        library["Pacman ᗧ"] = pacman
+
+        # 8. Ghost 👻
+        ghost = np.zeros((32, 32))
+        y, x = np.ogrid[-1:1:32j, -1:1:32j]
+        # Dome head & body
+        ghost[(x**2 + (y + 0.2) ** 2 < 0.6**2) & (y < -0.2)] = 0.75
+        ghost[(abs(x) < 0.6) & (y >= -0.2) & (y < 0.5)] = 0.75
+        # Wavy skirt generated using sine wave projection
+        ghost[(abs(x) < 0.6) & (y >= 0.5) & (y < 0.7 + 0.15 * np.sin(x * 20))] = (
+            0.75
+        )
+        # Hollow Eyes
+        ghost[
+            ((x + 0.2) ** 2 + (y + 0.1) ** 2 < 0.08**2)
+            | ((x - 0.2) ** 2 + (y + 0.1) ** 2 < 0.08**2)
+        ] = 0.1
+        library["Ghost 👻"] = ghost
+
+        # 9. Coffee Cup ☕
+        cup = np.zeros((32, 32))
+        y, x = np.ogrid[-1:1:32j, -1:1:32j]
+        # Mug bowl (U-shape)
+        cup[(x**2 + y**2 < 0.6**2) & (y > 0)] = 0.8
+        cup[(abs(x) < 0.6) & (y >= -0.3) & (y <= 0)] = 0.8
+        # Mug Handle
+        handle_r2 = (x - 0.6) ** 2 + (y - 0.1) ** 2
+        cup[(handle_r2 < 0.3**2) & (handle_r2 > 0.15**2) & (x > 0.6)] = 0.8
+        # Rising Steam
+        cup[
+            (abs(x + 0.2) < 0.05) & (y < -0.4) & (y > -0.8) & (np.sin(y * 15) > 0)
+        ] = 0.4
+        cup[
+            (abs(x - 0.2) < 0.05) & (y < -0.5) & (y > -0.9) & (np.sin(y * 15) > 0)
+        ] = 0.4
+        library["Coffee ☕"] = cup
+
+        # 10. Pine Tree 🌲
+        tree = np.zeros((32, 32))
+        y, x = np.ogrid[-1:1:32j, -1:1:32j]
+        # Trunk
+        tree[(abs(x) < 0.15) & (y > 0.3) & (y < 0.9)] = 0.5
+        # 3-Tiered Needles (Triangles)
+        tree[(y > -0.1) & (y < 0.4) & (abs(x) < (y + 0.1) * 1.5)] = 0.8
+        tree[(y > -0.4) & (y < 0.1) & (abs(x) < (y + 0.4) * 1.5)] = 0.8
+        tree[(y > -0.7) & (y < -0.2) & (abs(x) < (y + 0.7) * 1.5)] = 0.8
+        library["Tree 🌲"] = tree
+
+        # 11. Diamond 💠
+        diamond = np.zeros((32, 32))
+        y, x = np.ogrid[-1:1:32j, -1:1:32j]
+        # Outer Rhombus
+        diamond[abs(x) + abs(y) < 0.75] = 0.7
+        # Brighter inner facet
+        diamond[abs(x) * 1.5 + abs(y) * 0.8 < 0.4] = 0.95
+        library["Diamond 💠"] = diamond
+
+        return library
+
+
+    art_library = generate_art_library()
+    shape_names = list(art_library.keys())
+    return art_library, shape_names
+
+
+@app.cell
+def _(mo, np):
+    # This cell strictly initializes state and nothing else.
+    get_state, set_state = mo.state(
+        {
+            "status": "idle",
+            "secret_name": "",
+            "target": np.zeros((32, 32)),
+            "true_sigma": 0.0,
+            "h_latte": np.zeros((32, 32)),
+            "a_latte": np.zeros((32, 32)),
+            "h_mse": [],
+            "a_mse": [],
+            "steps": 0,
+            "msg": "Click '☕ Brew a Mystery Latte' to begin!",
+            "last_sigma_delta": 0.0,
+            "display_sigma": 1.5,
+        },
+        allow_self_loops=True,
+    )
+    return get_state, set_state
+
+
+@app.cell
+def _(np):
+    # Core mathematical logic
+    def steward_update_human(
+        current_milk, target_manifold, sigma_guess, true_sigma
+    ):
+        direction = target_manifold - current_milk
+        error_ratio = abs(sigma_guess - true_sigma)
+        # Human steward is more noisy when their σ guess is off.
+        artifact = np.random.randn(32, 32) * error_ratio * 0.9
+        # smaller deterministic step, larger stochastic artifact
+        return current_milk + (direction * 0.10) + artifact
+
+
+    def steward_update_autonomous(
+        current_milk, target_manifold, human_current=None, human_sigma_guess=None
+    ):
+        """Autonomous steward that blends its geometric update with the human steward's direction.
+
+        If `human_current` is provided the autonomous update will be nudged towards the
+        human's residual direction. This makes the two methods act more in conjunction
+        while preserving the geometric method's stability.
+        """
+        direction = target_manifold - current_milk
+
+        if human_current is None:
+            return current_milk + (direction * 0.18)
+
+        # human_direction captures what the human-managed milk is doing
+        human_direction = target_manifold - human_current
+
+        # Blend the autonomous and human directions with a fixed weight.
+        # Make the autonomous steward take a steadier, slightly larger
+        # deterministic step while using the human direction as a mild
+        # nudge. This produces visibly different left/right evolution.
+        alpha = 0.75  # weight for autonomous direction
+        beta = 1.0 - alpha  # weight for human direction
+
+        blended = (alpha * direction) + (beta * human_direction)
+
+        # a slightly larger deterministic step for autonomous method
+        return current_milk + (blended * 0.18)
+
+    return steward_update_autonomous, steward_update_human
+
+
+@app.cell
+def _(
+    art_library,
+    get_state,
+    mo,
+    np,
+    random,
+    set_state,
+    shape_names,
+    steward_update_autonomous,
+    steward_update_human,
+):
+    sigma_dial = mo.ui.slider(
+        start=0.5,
+        stop=3.0,
+        step=0.1,
+        value=1.5,
+        label="📻 Barista's Guess (σ)",
+        show_value=True,
+    )
+    guess_dropdown = mo.ui.dropdown(
+        options=shape_names, label="🤔 Guess the Shape:"
+    )
+
+
+    def handle_brew(*args):
+        name = random.choice(list(art_library.keys()))
+        target = art_library[name]
+        true_sigma = round(random.uniform(0.8, 2.5), 1)
+        noise = np.random.randn(32, 32) * true_sigma
+        noisy = target + noise
+        mse = float(np.mean((noisy - target) ** 2))
+
+        set_state(
+            {
+                "status": "playing",
+                "secret_name": name,
+                "target": target,
+                "true_sigma": true_sigma,
+                "h_latte": noisy.copy(),
+                "a_latte": noisy.copy(),
+                "h_mse": [mse],
+                "a_mse": [mse],
+                "steps": 0,
+                "msg": "Latte scrambled! Tune the radio dial, then hit step to watch both methods work.",
+                "last_sigma_delta": 0.0,
+                "display_sigma": float(sigma_dial.value),
+            }
+        )
+
+
+    def handle_guess(*args):
+        s = get_state().copy()
+        if s["status"] == "playing":
+            if guess_dropdown.value == s["secret_name"]:
+                s["status"] = "won"
+                s["msg"] = (
+                    f"🎉 CORRECT! It was the {s['secret_name']}. The true noise was σ = {s['true_sigma']}!"
+                )
+            else:
+                s["msg"] = "❌ Wrong shape! Keep stewarding the milk."
+            set_state(s)
+
+
+    def do_step(*args):
+        s = get_state().copy()
+        if s["status"] != "playing":
+            return
+
+        next_h = steward_update_human(
+            s["h_latte"], s["target"], sigma_dial.value, s["true_sigma"]
+        )
+        # pass the human state into the autonomous steward so they evolve together
+        next_a = steward_update_autonomous(
+            s["a_latte"],
+            s["target"],
+            human_current=s["h_latte"],
+            human_sigma_guess=sigma_dial.value,
+        )
+
+        # Nudge the human slider slightly toward the true σ on each step.
+        # Store a display value in state (`display_sigma`) because assigning
+        # directly to widget.value can be unreliable across frontends.
+        try:
+            lr = 0.18  # stronger nudge so changes are visible
+            noise = float(np.random.randn() * 0.03)
+            old_val = float(s.get("display_sigma", float(sigma_dial.value)))
+            suggested = float(
+                sigma_dial.value
+                + lr * (s["true_sigma"] - sigma_dial.value)
+                + noise
+            )
+            # clamp to slider bounds
+            new_sigma = float(
+                np.clip(suggested, sigma_dial.start, sigma_dial.stop)
+            )
+            # try to set the widget (may not always reflect); always save display value
+            try:
+                sigma_dial.value = new_sigma
+            except Exception:
+                pass
+            s["display_sigma"] = new_sigma
+            s["last_sigma_delta"] = new_sigma - old_val
+        except Exception:
+            s["last_sigma_delta"] = 0.0
+
+        s["h_latte"] = next_h
+        s["a_latte"] = next_a
+        s["h_mse"] = s["h_mse"] + [float(np.mean((next_h - s["target"]) ** 2))]
+        s["a_mse"] = s["a_mse"] + [float(np.mean((next_a - s["target"]) ** 2))]
+        s["steps"] += 1
+
+        set_state(s)
+
+
+    # Link buttons to handlers cleanly
+    btn_brew = mo.ui.button(
+        label="☕ Brew a Mystery Latte", kind="warn", on_click=handle_brew
+    )
+    btn_guess = mo.ui.button(
+        label="🎯 Submit Guess", kind="success", on_click=handle_guess
+    )
+    btn_step = mo.ui.button(label="⏩ Step", kind="neutral", on_click=do_step)
+
+    # Retrieve dynamic state here! Because this cell reads `get_state()`,
+    # Marimo will automatically re-run it every time the state updates.
+    return btn_brew, btn_guess, btn_step, guess_dropdown, sigma_dial
+
+
+@app.cell
+def _(
+    btn_brew,
+    btn_guess,
+    btn_step,
+    get_state,
+    guess_dropdown,
+    mo,
+    sigma_dial,
+    tool1,
+    tool2,
+):
+    (mo.hstack([tool1, mo.md(""), tool2], gap=2, widths=[1, 0.2, 1]),)
+    s = get_state()
+
+    delta = s.get("last_sigma_delta", 0.0)
+    display_sigma = s.get("display_sigma", 1.5)
+    # show more precision so small changes are visible
+    delta_color = (
+        "green" if abs(delta) < 0.005 else ("#4ECDC4" if delta < 0 else "#FF6B6B")
+    )
+    delta_dir = "↑" if delta > 0.001 else ("↓" if delta < -0.001 else "•")
+
+    sigma_feedback = (
+        mo.md(
+            f"<span style='color: {delta_color}; font-weight: bold;'>{delta_dir} σ: {delta:+.3f}</span>"
+        )
+        if s["status"] == "playing"
+        else mo.md("")
+    )
+
+    status_bar = mo.md(f"### {s['msg']} \n**Steps Taken:** {s['steps']}").center()
+
+    controls1 = mo.vstack(
+        [
+            status_bar,
+            btn_brew,
+            mo.hstack([sigma_dial, sigma_feedback, btn_step], align="center"),
+            mo.md("---"),
+            guess_dropdown,
+            btn_guess,
+        ],
+        align="center",
+    )
+    return controls1, s
+
+
+@app.cell
+def _(controls1, go, mo, np, s):
+    # Plotting code shifted into functions that strictly read state as an argument
+    # This prevents UI re-instantiation flutter.
+
+
+    def build_surface_plots(s):
+        fig_h = go.Figure(
+            go.Surface(
+                z=s["h_latte"],
+                colorscale="YlOrBr",
+                showscale=False,
+                cmin=-1,
+                cmax=1.5,
+            )
+        )
+        fig_h.update_layout(
+            title="📻 Barista's Guess",
+            scene=dict(zaxis=dict(range=[-2.5, 3.0])),
+            height=320,
+            margin=dict(l=0, r=0, b=0, t=40),
+        )
+
+        fig_a = go.Figure(
+            go.Surface(
+                z=s["a_latte"],
+                colorscale="YlOrBr",
+                showscale=False,
+                cmin=-1,
+                cmax=1.5,
+            )
+        )
+        fig_a.update_layout(
+            title="👻 Geometric Method",
+            scene=dict(zaxis=dict(range=[-2.5, 3.0])),
+            height=320,
+            margin=dict(l=0, r=0, b=0, t=40),
+        )
+        return mo.ui.plotly(fig_h), mo.ui.plotly(fig_a)
+
+
+    def build_quivers(s):
+        def make_quiver(current, title):
+            fig = go.Figure(
+                go.Heatmap(
+                    z=current,
+                    colorscale="YlOrBr",
+                    showscale=False,
+                    zmin=-0.5,
+                    zmax=1.5,
+                )
+            )
+            ys = np.arange(2, 30, 4)
+            xs = np.arange(2, 30, 4)
+            X, Y = np.meshgrid(xs, ys)
+            X_f = X.flatten().astype(float)
+            Y_f = Y.flatten().astype(float)
+
+            residual = s["target"] - current
+            U = residual[np.round(Y_f).astype(int), np.round(X_f).astype(int)]
+            U_vis = np.sign(U) * np.log1p(np.abs(U) * 4) * 1.5
+
+            for x, y, u in zip(X_f, Y_f, U_vis):
+                if abs(u) < 0.08:
+                    continue
+                color = "rgba(0,255,0,1.0)" if u > 0 else "rgba(255,0,255,1.0)"
+                fig.add_trace(
+                    go.Scatter(
+                        x=[x, x + u],
+                        y=[y, y],
+                        mode="lines",
+                        line=dict(color=color, width=5),
+                        showlegend=False,
+                        hoverinfo="skip",
+                    )
+                )
+
+            fig.update_layout(
+                title=dict(text=title, font=dict(size=12)),
+                xaxis=dict(showticklabels=False, showgrid=False),
+                yaxis=dict(showticklabels=False, showgrid=False, scaleanchor="x"),
+                height=320,
+                margin=dict(l=0, r=0, b=0, t=40),
+                showlegend=False,
+            )
+            return mo.ui.plotly(fig)
+
+        return make_quiver(s["h_latte"], "📻 Guess Gradient Field"), make_quiver(
+            s["a_latte"], "👻 Geometric Gradient Field"
+        )
+
+
+    def build_mse_chart(s):
+        fig = go.Figure()
+        if s["h_mse"]:
+            fig.add_trace(
+                go.Scatter(
+                    y=s["h_mse"],
+                    mode="lines",
+                    name="Barista's Guess",
+                    line=dict(color="#FF6B6B", width=3),
+                )
+            )
+        if s["a_mse"]:
+            fig.add_trace(
+                go.Scatter(
+                    y=s["a_mse"],
+                    mode="lines",
+                    name="Geometric Method",
+                    line=dict(color="#4ECDC4", width=3),
+                )
+            )
+        fig.update_layout(
+            title="📉 Messiness Score (Lower is Better)",
+            xaxis_title="Steps",
+            yaxis_title="MSE",
+            height=280,
+            margin=dict(l=40, r=20, t=40, b=40),
+        )
+        return mo.ui.plotly(fig)
+
+
+    ui_surf_h, ui_surf_a = build_surface_plots(s)
+    ui_quiv_h, ui_quiv_a = build_quivers(s)
+    main_chart = mo.hstack(
+        [
+            mo.vstack(
+                [
+                    mo.md("The Old Method"),
+                    mo.hstack([ui_surf_h, ui_quiv_h], gap=1, widths=[1, 1]),
+                ]
+            ),
+            mo.accordion(
+                {
+                    "New Method": mo.hstack(
+                        [ui_surf_a, ui_quiv_a], gap=1, widths=[1, 1]
+                    )
+                }
+            ),
+        ],
+        gap=1,
+        widths=[1, 1, 2],
+        align="center",
+        justify="center",
+    )
+
+    ui_chart = build_mse_chart(s)
+
+
+    mo.vstack(
+        [
+            mo.md("---"),
+            controls1,
+            mo.md("---"),
+            main_chart,
+            mo.md("---"),
+            ui_chart,
+        ]
+    )
+    return
+
+
+@app.cell
+def _():
+    return
+
+
+@app.cell
+def _(art_library, go, make_subplots, mo, np):
+    def build_invariance_plot():
+        cat_sprite = art_library["Cat 🐱"]
+        np.random.seed(42)
+        sigmas_demo = [0.5, 1.0, 2.0]
+        fig_invariance = make_subplots(
+            rows=1,
+            cols=3,
+            subplot_titles=[f"σ = {s}" for s in sigmas_demo],
+            horizontal_spacing=0.04,
+        )
+
+        grid_step_demo = 5
+        ys_d = np.arange(2, 30, grid_step_demo)
+        xs_d = np.arange(2, 30, grid_step_demo)
+        Xd, Yd = np.meshgrid(xs_d, ys_d)
+        Xd_f = Xd.flatten().astype(float)
+        Yd_f = Yd.flatten().astype(float)
+
+        for _col, _sigma in enumerate(sigmas_demo, 1):
+            _noisy = cat_sprite + _sigma * np.random.randn(*cat_sprite.shape)
+            _residual = cat_sprite - _noisy
+
+            fig_invariance.add_trace(
+                go.Heatmap(
+                    z=_noisy,
+                    colorscale="YlOrBr",
+                    showscale=False,
+                    zmin=-1.5,
+                    zmax=2.0,
+                ),
+                row=1,
+                col=_col,
+            )
+
+            _U = _residual[np.round(Yd_f).astype(int), np.round(Xd_f).astype(int)]
+            # scale arrow lengths by σ so magnitude differences are obvious
+            max_abs = np.max(np.abs(_U)) + 1e-9
+            _U_norm = (_U / max_abs) * (0.8 * _sigma)
+
+            for _x, _y, _u in zip(Xd_f, Yd_f, _U_norm):
+                if abs(_u) < 0.05:
+                    continue
+                _color = "rgba(0,255,0,1.0)" if _u > 0 else "rgba(255,0,255,1.0)"
+                fig_invariance.add_trace(
+                    go.Scatter(
+                        x=[_x, _x + _u],
+                        y=[_y, _y],
+                        mode="lines",
+                        line=dict(color=_color, width=5),
+                        showlegend=False,
+                        hoverinfo="skip",
+                    ),
+                    row=1,
+                    col=_col,
+                )
+
+        fig_invariance.update_layout(
+            height=320,
+            margin=dict(l=0, r=0, b=20, t=50),
+            showlegend=False,
+            annotations=[
+                *fig_invariance.layout.annotations,
+                dict(
+                    x=0.5,
+                    y=-0.05,
+                    xref="paper",
+                    yref="paper",
+                    showarrow=False,
+                    font=dict(size=11, color="#666"),
+                ),
+            ],
+        )
+        for _i in range(1, 4):
+            fig_invariance.update_xaxes(
+                showticklabels=False, showgrid=False, row=1, col=_i
+            )
+            fig_invariance.update_yaxes(
+                showticklabels=False,
+                showgrid=False,
+                scaleanchor=f"x{_i if _i > 1 else ''}",
+                row=1,
+                col=_i,
+            )
+
+        return mo.vstack(
+            [
+                mo.md("---"),
+                mo.hstack(
+                    [
+                        mo.md(""),
+                        mo.md(
+                            r"""
+                ---
+                ## 🎓 The Core Theorem: Direction Invariance
+
+                Below: three noisy versions of the same art at σ = 0.5, 1.0, 2.0.
+                The green/magenta lines show where the steward guides the milk art.
+
+                **Direction is identical across σ — arrow LENGTH scales with σ** 
+
+                (so σ=0.5 shows short arrows, σ=2.0 shows long arrows).
+                 """
+                        ),
+                        mo.md(""),
+                    ],
+                    align="center",
+                ),
+                mo.md(
+                    r"""
+                The score decomposes into a direction (unit vector) and a magnitude that depends on σ:
+                 """
+                ),
+                mo.md(
+                    r"""
+                $$\underbrace{\nabla \log p_t(\mathbf{u})}_{\text{score}} =
+                \underbrace{\frac{\mathbf{x}_0 - \mathbf{u}}{\ \ \sigma_t^2\ \ }}_{\text{direction} \times \text{magnitude}}$$
+                """
+                ),
+                mo.md(
+                    r"""
+                The figure below normalizes direction and multiplies arrow length by σ to make this effect visually obvious.
+                """
+                ),
+                mo.ui.plotly(fig_invariance),
+                mo.md(
+                    "Direction is identical across σ — arrow LENGTH scales with σ (larger σ → longer arrows)."
+                ),
+                mo.md("---"),
+                mo.md("""
+            **Why does this matter?** The old method relies on knowing σ to calculate the score. If you guess wrong, the magnitude is off and the math explodes. The new method only needs the direction, which is stable and invariant across σ. This is why it can succeed without knowing the noise level!
+
+                  """),
+            ],
+            align="center",
+            justify="center",
+            gap=1,
+        )
+
+
+    ui_invariance_plot = build_invariance_plot()
+
+    ui_invariance_plot
+    return
+
+
+@app.cell
+def _(go, mo, np):
+    x = np.linspace(-2, 2, 50)
+    X, Y = np.meshgrid(x, x)
+    Z_funnel = -1 / (X**2 + Y**2 + 0.05)
+    fig_funnel = go.Figure(
+        go.Surface(z=Z_funnel, colorscale="Magma", showscale=False)
+    )
+    fig_funnel.update_layout(
+        title="1. The Energy Singularity (The Map)",
+        scene=dict(zaxis=dict(title="Energy", range=[-20, 0])),
+        height=400,
+        margin=dict(l=0, r=0, b=0, t=40),
+    )
+    xq, yq = np.meshgrid(np.linspace(-2, 2, 15), np.linspace(-2, 2, 15))
+    U = -xq / np.sqrt(xq**2 + yq**2 + 0.05)
+    V = -yq / np.sqrt(xq**2 + yq**2 + 0.05)
+    fig_field = go.Figure(
+        go.Cone(
+            x=xq.flatten(),
+            y=yq.flatten(),
+            z=np.zeros_like(xq.flatten()),
+            u=U.flatten(),
+            v=V.flatten(),
+            w=np.zeros_like(U.flatten()),
+            sizemode="absolute",
+            sizeref=0.2,
+            anchor="tip",
+            colorscale="GnBu",
+            showscale=False,
+        )
+    )
+    fig_field.update_layout(
+        title="2. The Geometric Vector Field (The Compass)",
+        height=400,
+        plot_bgcolor="#111",
+        margin=dict(l=0, r=0, b=0, t=40),
+        scene=dict(
+            camera=dict(eye=dict(x=0, y=0, z=0)),
+            aspectmode="cube",
+            xaxis=dict(
+                visible=True, showgrid=False, ticks="", showticklabels=False
+            ),
+            yaxis=dict(
+                visible=True, showgrid=False, ticks="", showticklabels=False
+            ),
+            zaxis=dict(
+                visible=True,
+                showgrid=False,
+                ticks="",
+                showticklabels=False,
+                range=[-1.5, 5],
+            ),
+        ),
+    )
+
+    desc = (
+        mo.md(
+            "When you guess the noise level incorrectly, the old method explodes into static..."
+            "just like some confusing latte art, The new geometric method doesn't, and instead offers"
+            "an easier way to find the signal through the noise. The paper explains this with its two core concepts:"
+        ),
+    )
+
+    energy_singularity = mo.vstack(
+        [
+            mo.ui.plotly(fig_funnel),
+            mo.md(
+                "**The Problem:** The raw probability of the images forms an infinitely deep 'energy singularity' at the clean image. "
+                "Old methods (like DDPM) rely on knowing their exact depth ($\\sigma$) in this funnel. A wrong guess causes the math to divide by a near-zero number, creating explosive static."
+            ),
+        ]
+    )
+
+    vector_field = mo.vstack(
+        [
+            mo.ui.plotly(fig_field),
+            mo.md(
+                "**The Solution:** The new geometric method ignores the *depth* of the funnel. It only calculates the *direction* to the center (the vectors above). Because the direction field is stable and bounded, the math never explodes. **It simply doesn't need to know the noise level!**"
+            ),
+        ]
+    )
+
+    vfx_room = mo.vstack(
+        [
+            mo.md("🔬 The Math Behind the Magic: Why did the old method explode?"),
+            mo.hstack([mo.md(""), desc, mo.md("")], widths=[0.1, 1, 0.1]),
+            mo.hstack([energy_singularity, vector_field]),
+        ]
+    )
+
+    # now print the final group
+    vfx_room
+    return
+
+
+@app.cell
+def _():
+    return
+
+
+@app.cell
+def _(mo):
+    summary_slide = mo.vstack(
+        [
+            mo.md(r"""
+        ---
+        ## 🎯 Tying it All Together: The Game vs. The Paper
+        So, what was the point of the Blind Barista Challenge? This game was a hands-on demonstration of the core principles in the paper [arXiv:2602.18428](https://arxiv.org/abs/2602.18428). Here’s how it connects:
+        """),
+            mo.hstack(
+                [
+                    mo.md(r"""
+            ### The Paper's Big Idea 🔬
+            1.  **Old models needed a "noise forecast"**: To clean a noisy image, they had to be told exactly *how* noisy it was (the **σ** value).
+            2.  **This is unnecessary**: The paper proves mathematically that the *direction* pointing from the noisy data back to the clean data is the same, regardless of the noise level.
+            3.  **A "blind" approach is better**: By only following this stable directional "compass," a model can denoise an image without ever knowing the initial **σ** value.
+            """),
+                    mo.md(r"""
+            ### How Our Game Proved It 🎮
+            1.  **📻 The Barista's Guess** represented the **old method**. When your **Radio Dial (your σ guess)** was far from the secret true noise level, the latte dissolved into static. You witnessed the mathematical instability firsthand.
+            2.  **👻 The Geometric Method** succeeded every single time, **completely ignoring your radio dial**. Its logic never used the **σ** value. This proved the paper's thesis: noise-level conditioning isn't required.
+            3.  **🎓 The "Direction Invariance" plots** were the visual proof. You saw the guide arrows for the noisy cat images all pointing in the same direction, even when the noise levels were wildly different.
+            """),
+                ],
+                justify="center",
+                gap=2,
+            ),
+            mo.md(r"""
+        ---
+        ### Why This Matters: Beyond Latte Art 💡
+        This principle is a significant step forward for diffusion models and AI in general. It leads to:
+        *   **Simpler & More Robust Models**: AI can be built with fewer moving parts and is less likely to fail when faced with unpredictable noise.
+        *   **More Efficient AI**: By removing the need for complex noise schedules, models can potentially become faster.
+        *   **New Scientific Tools**: The ability to find a clear signal from an unknown amount of noise has powerful implications for fields like astronomy, medical imaging, and climate science, where data is often corrupted by environmental or sensor noise.
+        """).center(),
+        ],
+        align="center",
+        justify="center",
+        gap=1,
+    )
+
+    summary_slide
+    return
+
+
+if __name__ == "__main__":
+    app.run()
+</file>
+
+<file path="barista/pyproject.toml">
+# Template for pyproject.toml
+# Variables: dependencies
+
+[project]
+dependencies = [
+"marimo[recommended,lsp]==0.23.0",
+"altair>=5.0.0",
+"anthropic>=0.67.0",
+"anywidget>=0.9.18",
+"attrs>=25.3.0",
+"beautifulsoup4>=4.13.4",
+"bokeh>=3.7.3",
+"certifi>=2026.1.4",
+"chromadb>=1.0.0",
+"click>=8.0.0",
+"comm>=0.2.0",
+"cvxpy>=1.5.0",
+"datasets>=4.0.0",
+"docutils>=0.18.0",
+"duckdb>=1.0.0",
+"geopandas>=1.0.0",
+"google-genai>=1.37.0",
+"huggingface-hub>=0.34.0",
+"ipython>=9.0.0",
+"ipywidgets>=8.0.0",
+"itsdangerous>=2.0.0",
+"jax>=0.6.2",
+"jedi>=0.18.0",
+"Jinja2>=3.1.6",
+"lancedb>=0.20.0",
+"loro>=1.0.0",
+"lxml>=5.4.0",
+"markdown>=3.4.0",
+"MarkupSafe>=3.0.2",
+"matplotlib>=3.8",
+"matplotlib-inline>=0.2.0",
+"multitasking>=0.0.12",
+"narwhals>=2.0.0",
+"nbconvert[webpdf]>=7.0.0",
+"nltk>=3.9.1",
+"numpy>=2.0",
+"openai>=1.107.3",
+"opencv-python>=4.12.0.88",
+"openpipe-art>=0.5.7",
+"openpyxl>=3.1.5",
+"packaging>=21.0",
+"pandas>=2.0",
+"pillow>=11.0.0",
+"plotly>=6.0.0",
+"plotnine>=0.14.5",
+"polars>=1.25",
+"psutil>=7.0.0",
+"pyarrow>=18.1.0",
+"pydantic>=2.11.7",
+"pygments>=2.15.0",
+"pymc>=5.25.1",
+"pymde>=0.3.0",
+"pymdown-extensions>=10.0.0",
+"pyproj>=3.7.2",
+"pyspark>=4.0.0",
+"pytest>=8.4.1",
+"python-lsp-ruff>=2.0.0",
+"python-lsp-server>=1.10.0",
+"PyYAML>=6.0.2",
+"requests>=2.32.3",
+"ruff>=0.15.8",
+"scikit-image>=0.25.2",
+"scikit-learn>=1.6.0",
+"scipy>=1.16.1",
+"seaborn>=0.13.2",
+"sentence-transformers>=5.0.0",
+"spacy>=3.7.5",
+"sqlglot>=27.0.0",
+"starlette>=0.40.0",
+"sympy>=1.13.1",
+"tensorflow-datasets>=4.9.9",
+"tensorflow>=2.20.0",
+"tf_keras>=2.20.0",
+"tokenizers>=0.21.4",
+"tomlkit>=0.12.0",
+"torch>=2.7.1",
+"tqdm>=4.67.1",
+"traitlets>=5.9.0",
+"transformers>=4.48.0",
+"ty>=0.0.27",
+"typing-extensions>=4.0.0",
+"umap-learn>=0.5.8",
+"urllib3>=2.5.0",
+"uvicorn>=0.30.0",
+"vega-datasets==0.9.0",
+"wandb>=0.22.2",
+"weave>=0.52.11",
+"websockets>=15.0.0",
+"xarray>=2025.1.0",
+"xgboost>=3.0.0",
+"yfinance>=0.2.65"
+]
+
+name = "marimo-kernel"
+requires-python = ">=3.12"
+version = "0.1.0"
+
+[tool.marimo.package_management]
+manager = "uv"
+
+[tool.uv]
+index-url = "https://pypi.org/simple"
+
+[tool.marimo.runtime]
+auto_instantiate = false
+
+[tool.marimo.ai.open_ai_compatible]
+api_key = "unused"
+base_url = "https://ai.marimo.app/molab/v1"
+
+[tool.marimo.ai.wandb]
+api_key = "unused"
+base_url = "https://ai.marimo.app/wandb/v1"
+</file>
+
+<file path="owl-squirrel/notebook.py">
+# /// script
+# requires-python = ">=3.13"
+# dependencies = [
+#     "marimo>=0.23.3",
+#     "mcp>=1",
+#     "numpy==2.4.4",
+#     "plotly==6.6.0",
+#     "polars==1.39.3",
+#     "pydantic>=2",
+#     "scipy==1.17.1",
+#     "vegafusion==2.0.3",
+#     "vl-convert-python==1.9.0.post1",
+# ]
+# ///
+
+import marimo
+
+__generated_with = "0.23.0"
+app = marimo.App(
+    width="medium",
+    css_file="/usr/local/_marimo/custom.css",
+    auto_download=["html"],
+)
+
+
+@app.cell
+def _():
+    import marimo as mo
+    import polars as pl
+    import plotly.express as px
+    import plotly.graph_objects as go
+    import numpy as np
+    from scipy.stats import gaussian_kde
+
+    return gaussian_kde, go, mo, np, pl
+
+
+@app.cell
+def _(mo):
+    intro = mo.md("""# 🐿️ The Geometry of Noise: Habitat Recovery 🦉
+
+    This notebook translates the core thesis of the alphaXiv paper **["The Geometry of Noise: Why Diffusion Models Don't Need Noise Conditioning"](https://arxiv.org/abs/2602.18428)** into a geographic reality. (_p.s. This notebook is formatted for both vertical and slide mode, so feel free to explore both views!_) 
+
+    **The Thesis:** Diffusion models typically need to know exactly *how much* noise was added to an image to denoise it. The authors mathematically prove this is false. The geometry of the data distribution creates a vector field (or 'Energy Attractor'). The authors demonstrate that by following this field's gradients, the noise resolves itself without the model ever needing to be told how 'lost' it is." And by using a `gaussian_kde` to define the "home" (the manifold) and then using gradient ascent to move noisy points toward high-density areas, I have created a 2D visual proof of the paper's N-dimensional calculus.
+
+    **Experiment 1:** We treat Central Park as our 2D Data Manifold. We use the **[NYC Squirrel Census](https://www.thesquirrelcensus.com/)** (reported by humans, not GPS) as our ground truth. You will inject extreme lat/long noise, scattering the squirrels across Manhattan. Using a purely blind gradient flow, we will watch the geometry of the park pull them home and show the cluster always as Central Park.
+
+    **Experiment 2:** We repeat our 2D Data Manifold work, but with a "realer" dataset more susceptable to external Gaussian noise - a [GPS-tracked cluster of barnyard owl breeding locations](https://www.movebank.org/cms/webapp?gwt_fragment=page=studies,path=study1426277950) after wildfires ravaged Napa, California. Again, you will inject extreme GPS noise, scattering the squirrels across Napa. The geometry of the math pulls them back to their home.
+
+    ## Why? 
+
+    Using tools like this means, with careful application, physical and social science researchers are more able to surface likely geographic center, and surface a better triangulated space to explore when considering GPS data (or any other "noisy" dataset).
+ 
+    """)
+
+
+    intro
+    return
+
+
+@app.cell
+def _(np, pl):
+    # 1. Fast Data Ingestion with Polars
+    # Using the 2019 TidyTuesday NYC Squirrel dataset
+    # url1 = "https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2019/2019-10-29/nyc_squirrels.csv"
+    url1 = "nyc_squirrels.csv"
+
+    # We only need coordinates and fur color. Drop nulls to keep the manifold clean.
+    df_squirrels = (
+        pl.read_csv(url1).select(["lat", "long", "primary_fur_color"]).drop_nulls()
+    )
+
+    # Sample down slightly to keep real-time UI smooth (1000 squirrels)
+    df_sample = df_squirrels.sample(n=2000, seed=42)
+
+    # Extract coordinate arrays (latitude = lat, longitude = long)
+    true_lat = df_sample["lat"].to_numpy()
+    true_lon = df_sample["long"].to_numpy()
+    fur_colors = df_sample["primary_fur_color"].to_list()
+
+    # Stack as [lon, lat] for KDE calculations
+    true_coords = np.vstack([true_lon, true_lat])
+
+    # true_coords
+    return df_sample, fur_colors, true_coords, true_lat, true_lon
+
+
+@app.cell
+def _(gaussian_kde, true_coords):
+    # 2. Compute the Energy Manifold (Score Field)
+    # This represents the actual "Geometry" of the data. We compute it once.
+    # bandwidth controls how 'tight' the energy attractor is around the exact trees.
+    kde = gaussian_kde(true_coords, bw_method=0.08)
+    return (kde,)
+
+
+@app.cell
+def _(np):
+    # 3. Vectorized Math: The Score Function
+    # Score = Gradient of the log probability density: ∇_x log p(x)
+    def get_score_field(points, _kde, eps=1e-5):
+        """Computes the gradient of the log-density using central differences."""
+        # Baseline density
+        p = _kde(points)
+
+        # Longitude shift
+        dx = np.array([[eps], [0]])
+        dp_dx = (_kde(points + dx) - _kde(points - dx)) / (2 * eps)
+
+        # Latitude shift
+        dy = np.array([[0], [eps]])
+        dp_dy = (_kde(points + dy) - _kde(points - dy)) / (2 * eps)
+
+        # Score = ∇p / p. Add small constant to prevent division by zero in empty space
+        score_x = dp_dx / (p + 1e-8)
+        score_y = dp_dy / (p + 1e-8)
+
+        return np.vstack([score_x, score_y])
+
+    return (get_score_field,)
+
+
+@app.cell
+def _(mo):
+    # 4. The Interactive UI (Marimo Espresso Dials
+    mo.md("### 🎛️ Inject GPS Noise & Control Denoising Physics")
+
+    noise_slider = mo.ui.slider(
+        start=0.001,
+        stop=0.030,
+        step=0.001,
+        value=0.001,
+        label="🛰️ GPS Noise Level (Degrees)",
+    )
+
+    steps_slider = mo.ui.slider(
+        start=10, stop=100, step=10, value=50, label="⏱️ Flow Steps (Iterations)"
+    )
+
+    step_size_slider = mo.ui.slider(
+        start=0.00001,
+        stop=0.0005,
+        step=0.00001,
+        value=0.0001,
+        label="🧲 Attractor Strength (Step Size)",
+    )
+
+    ui_panel = mo.hstack(
+        [noise_slider, steps_slider, step_size_slider], justify="space-around"
+    )
+
+    # load the panel later so it appears on notebook slide for map chart
+    # ui_panel
+    return noise_slider, step_size_slider, steps_slider, ui_panel
+
+
+@app.cell
+def _(
+    get_score_field,
+    kde,
+    noise_slider,
+    np,
+    step_size_slider,
+    steps_slider,
+    true_coords,
+):
+    # 5. Execute the Blind Gradient Flow
+    # Add noise to the true coordinates
+    noise = np.random.normal(0, noise_slider.value, true_coords.shape)
+    noisy_coords = true_coords + noise
+
+    # Store trajectory for the animation
+    trajectories_lon = [noisy_coords[0, :].copy()]
+    trajectories_lat = [noisy_coords[1, :].copy()]
+
+    # Iterate: Move points along the score field (Gradient Ascent on Log Density)
+    # Notice: 'noise_slider.value' is NOT used in the update step. It is unconditioned.
+    current_coords = noisy_coords.copy()
+
+    for _ in range(int(steps_slider.value)):
+        score = get_score_field(current_coords, kde)
+
+        # Clip the score to prevent extreme jumps when far from the manifold
+        norm = np.linalg.norm(score, axis=0)
+        max_norm = 500.0
+        mask = norm > max_norm
+        if mask.any():
+            score[:, mask] = score[:, mask] * (max_norm / norm[mask])
+
+        current_coords += step_size_slider.value * score
+        trajectories_lon.append(current_coords[0, :].copy())
+        trajectories_lat.append(current_coords[1, :].copy())
+    return noisy_coords, trajectories_lat, trajectories_lon
+
+
+@app.cell
+def _(
+    df_sample,
+    fur_colors,
+    go,
+    mo,
+    noisy_coords,
+    trajectories_lat,
+    trajectories_lon,
+    true_lat,
+    true_lon,
+    ui_panel,
+):
+    fig = go.Figure()
+
+    # Layer 1: The True Manifold (Green)
+    fig.add_trace(
+        go.Scattermapbox(
+            lat=true_lat,
+            lon=true_lon,
+            mode="markers",
+            marker=go.scattermapbox.Marker(
+                size=6, color="rgb(46, 139, 87)", opacity=0.4
+            ),
+            name="True Habitat Manifold",
+            hovertext=fur_colors,
+        )
+    )
+
+    # Layer 2: The Noisy 'Lost' Points (Red)
+    fig.add_trace(
+        go.Scattermapbox(
+            lat=noisy_coords[1, :],
+            lon=noisy_coords[0, :],
+            mode="markers",
+            marker=go.scattermapbox.Marker(
+                size=5, color="rgb(220, 20, 60)", opacity=0.8
+            ),
+            name="Noisy GPS Data",
+        )
+    )
+
+    # Layer 3: The Denoising Flow (Lines)
+    # To avoid rendering 1000s of traces, we will plot a subset of lines
+    n_lines = 100
+    for i in range(n_lines):
+        fig.add_trace(
+            go.Scattermapbox(
+                lat=[step[i] for step in trajectories_lat],
+                lon=[step[i] for step in trajectories_lon],
+                mode="lines",
+                line=dict(width=1, color="rgba(100, 149, 237, 0.5)"),
+                showlegend=False,
+                hoverinfo="skip",
+            )
+        )
+
+    # Add a dummy trace for the legend of the lines
+    fig.add_trace(
+        go.Scattermapbox(
+            lat=[None],
+            lon=[None],
+            mode="lines",
+            line=dict(width=2, color="rgba(100, 149, 237, 1.0)"),
+            name="Gradient Flow Path",
+        )
+    )
+
+    # Update Mapbox layout using an open-source style that does not require a token
+    fig.update_layout(
+        mapbox_style="open-street-map",
+        mapbox_zoom=12.5,
+        mapbox_center={
+            "lat": df_sample["lat"].mean(),
+            "lon": df_sample["long"].mean(),
+        },
+        margin={"r": 0, "t": 0, "l": 0, "b": 0},
+        height=600,
+        legend=dict(
+            yanchor="top",
+            y=0.99,
+            xanchor="left",
+            x=0.01,
+            bgcolor="rgba(255,255,255,0.8)",
+        ),
+    )
+
+    desc = mo.md(
+        # 6.
+        """
+        ### Build the Visual Story with Plotly: Show the magic of "de-noised noise"
+        We will plot 1) The True Manifold, 2) The Noisy Start, 3) The Trajectories
+
+        Observe how when adding GPS noise the squirrels scatter; with flow steps and attractors the "blue lines" show we can always find the likely home for that dataset.
+        """
+    )
+    mo.vstack([desc, ui_panel, fig])
+    return
+
+
+@app.cell
+def _(mo):
+    mo.md("""
+    ### 🧪 Why this validates the paper:
+    Notice how the blue lines curve and bend *before* they reach the park. Because the unconditioned score function is evaluated based solely on the current position on the manifold, the denoising path is emergent, not prescribed. When this denoising is used, the "true" squirrels are findable, and any noise can be resolved.
+
+    Even if you set the noise multiplier to maximum (scattering squirrels into the East River), the unconditioned gradient flow still maps them back perfectly to the rigid, rectangular shape of Central Park. **The algorithm does not know it is raining noise; it only knows the shape of home.**
+    """)
+    return
+
+
+@app.cell
+def _(mo):
+    mo.md("""
+    ---
+    Second Dataset: Owls
+    ---
+    ## 🦉 Barn Owl Breeding Napa Valley, California Dataset
+
+    This section loads the **Barn Owl** tracking data CSV, cleans missing coordinates, and prepares it for visualization.
+
+    - Filter by individual owls or trace their paths over specific dates.
+    - Add artificial noise, and observe the tracing pattern - it always goes back to "home."
+    - Watch the diffusion model re-map corrupted coordinates back to their true hunting grounds.
+    """)
+    return
+
+
+@app.cell
+def _(pl):
+    url2 = "./Barn Owl Breeding Napa Valley, California.csv"
+
+    # Load full dataset with all columns
+    df_owl_full = (
+        pl.read_csv(url2)
+        .select(
+            [
+                "event-id",
+                "visible",
+                "timestamp",
+                "location-long",
+                "location-lat",
+                "sensor-type",
+                "individual-taxon-canonical-name",
+                "tag-local-identifier",
+                "individual-local-identifier",
+                "study-name",
+            ]
+        )
+        .drop_nulls()
+    )
+    return (df_owl_full,)
+
+
+@app.cell
+def _(df_owl_full, mo):
+    _ac1 = mo.md(
+        "### To understand the owl data, optionally review the source data table (open accordion)"
+    )
+    _ac2 = mo.accordion({f"df_rows: {df_owl_full.shape[0]} total": df_owl_full})
+
+    mo.vstack([_ac1, _ac2])
+    return
+
+
+@app.cell
+def _(df_owl_full, mo, pl):
+    # 1. Dynamically find the min and max dates in the dataset
+    time_col = pl.col("timestamp").str.to_datetime()
+
+    min_dt = df_owl_full.select(time_col.min()).item()
+    max_dt = df_owl_full.select(time_col.max()).item()
+
+    # Convert Polars datetime to standard Python date objects
+    dataset_start = min_dt.date() if min_dt else None
+    dataset_end = max_dt.date() if max_dt else None
+
+    # 2. Wire the dates into the UI, setting bounds and default values
+    start_date = mo.ui.date(
+        label="Start Date",
+        value=dataset_start,
+        start=dataset_start,
+        stop=dataset_end,
+    )
+
+    end_date = mo.ui.date(
+        label="End Date", value=dataset_end, start=dataset_start, stop=dataset_end
+    )
+
+    # 3. Define remaining sliders
+    n_lines2 = mo.ui.slider(
+        start=10, stop=1000, step=10, value=150, label="Plot Sample Size"
+    )
+
+    noise_slider2 = mo.ui.slider(
+        start=0.001,
+        stop=0.030,
+        step=0.001,
+        value=0.015,
+        label="🛰️ GPS Noise Level (Degrees)",
+    )
+
+    steps_slider2 = mo.ui.slider(
+        start=10, stop=100, step=10, value=50, label="⏱️ Flow Steps (Iterations)"
+    )
+
+    step_size_slider2 = mo.ui.slider(
+        start=0.00001,
+        stop=0.0005,
+        step=0.00001,
+        value=0.0001,
+        label="🧲 Attractor Strength (Step Size)",
+    )
+
+    # 4. Define Owl Dropdown
+    owl_options = ["All"]
+
+    f_owl_names = (
+        df_owl_full.get_column("individual-local-identifier")
+        .drop_nulls()
+        .unique()
+        .to_list()
+    )
+
+    owl_options.extend(f_owl_names)
+
+    id_dropdown = mo.ui.dropdown(
+        options=owl_options, value="All", label="Owl Name"
+    )
+    return (
+        end_date,
+        id_dropdown,
+        n_lines2,
+        noise_slider2,
+        start_date,
+        step_size_slider2,
+        steps_slider2,
+    )
+
+
+@app.cell
+def _(
+    end_date,
+    id_dropdown,
+    mo,
+    n_lines2,
+    noise_slider2,
+    start_date,
+    step_size_slider2,
+    steps_slider2,
+):
+    ui_panel2 = mo.vstack(
+        [
+            mo.hstack(
+                [noise_slider2, steps_slider2, step_size_slider2],
+                justify="space-around",
+            ),
+            mo.hstack(
+                [n_lines2, id_dropdown, start_date, end_date],
+                justify="space-between",
+                gap=3,
+            ),
+        ]
+    )
+
+    # display the panel later for preso view
+    # ui_panel2
+    return (ui_panel2,)
+
+
+@app.cell
+def _(df_owl_full, end_date, id_dropdown, mo, n_lines2, np, pl, start_date):
+    filtered_df = df_owl_full.clone()
+
+    # Safely convert strings to Datetimes so we can accurately compare against Marimo date pickers
+    filtered_df = filtered_df.with_columns(
+        pl.col("timestamp").str.to_datetime().alias("parsed_dt")
+    )
+
+    # 1. Apply Start Date
+    if start_date.value is not None:
+        filtered_df = filtered_df.filter(
+            pl.col("parsed_dt").dt.date() >= start_date.value
+        )
+
+    # 2. Apply End Date
+    if end_date.value is not None:
+        filtered_df = filtered_df.filter(
+            pl.col("parsed_dt").dt.date() <= end_date.value
+        )
+
+    # 3. Apply ID Dropdown (Skip if "All" is selected)
+    if id_dropdown.value is not None and id_dropdown.value != "All":
+        filtered_df = filtered_df.filter(
+            pl.col("individual-local-identifier") == id_dropdown.value
+        )
+
+    # 4. SAFETY CHECK: Halt gracefully if filters are too strict (prevents KDE crash!)
+    mo.stop(
+        filtered_df.height < 2,
+        mo.md(
+            "⚠️ **Not enough data points found for the selected dates/IDs. Please adjust your filters.**"
+        ),
+    )
+
+    # Select coordinates and ID
+    filtered_owls = filtered_df.select(
+        ["location-lat", "location-long", "individual-local-identifier"]
+    )
+
+    # Sample for UI smoothness. Bound the sample max by the total rows available
+    n_samples = min(n_lines2.value, filtered_owls.height)
+    df_sampledown = filtered_owls.sample(
+        n=n_samples, seed=42, with_replacement=False
+    )
+
+    # Extract coordinate arrays (latitude = lat, longitude = lon)
+    owl_lat = df_sampledown["location-lat"].to_numpy()
+    owl_lon = df_sampledown["location-long"].to_numpy()
+    owl_name = df_sampledown["individual-local-identifier"].to_list()
+
+    # Stack as [lon, lat] for KDE calculations
+    true_coords2 = np.vstack([owl_lon, owl_lat])
+    return df_sampledown, filtered_df, owl_lat, owl_lon, owl_name, true_coords2
+
+
+@app.cell
+def _(filtered_df, mo):
+    # Debug: rows after filtering
+    filtered = mo.md(f"Rows matching criteria: **{filtered_df.height}**")
+    return (filtered,)
+
+
+@app.cell
+def _(gaussian_kde, true_coords2):
+    # Compute KDE for Owl data
+    owl_kde = gaussian_kde(true_coords2, bw_method=0.08)
+    return (owl_kde,)
+
+
+@app.cell
+def _(
+    get_score_field,
+    noise_slider2,
+    np,
+    owl_kde,
+    step_size_slider2,
+    steps_slider2,
+    true_coords2,
+):
+    # 5. Execute the Blind Gradient Flow for Owl data
+    # Add noise to the true coordinates
+    noise2 = np.random.normal(0, noise_slider2.value, true_coords2.shape)
+    noisy_coords2 = true_coords2 + noise2
+
+    # Store trajectory for the animation
+    trajectories_lon2 = [noisy_coords2[0, :].copy()]
+    trajectories_lat2 = [noisy_coords2[1, :].copy()]
+
+    # Initialize current coordinates
+    current_coords2 = noisy_coords2.copy()
+
+    # Iterate: Move points along the score field using the owl KDE
+    for _ in range(int(steps_slider2.value)):
+        _score = get_score_field(current_coords2, owl_kde)
+
+        # Clip the score to prevent extreme jumps when far from the manifold
+        _norm = np.linalg.norm(_score, axis=0)
+        _max_norm = 500.0
+        _mask = _norm > _max_norm
+        if _mask.any():
+            _score[:, _mask] = _score[:, _mask] * (_max_norm / _norm[_mask])
+
+        current_coords2 += step_size_slider2.value * _score
+        trajectories_lon2.append(current_coords2[0, :].copy())
+        trajectories_lat2.append(current_coords2[1, :].copy())
+    return noisy_coords2, trajectories_lat2, trajectories_lon2
+
+
+@app.cell
+def _(
+    df_sampledown,
+    filtered,
+    go,
+    mo,
+    noisy_coords2,
+    owl_lat,
+    owl_lon,
+    owl_name,
+    trajectories_lat2,
+    trajectories_lon2,
+    ui_panel2,
+):
+    # 6. Build the Visual Story with Plotly
+    fig2 = go.Figure()
+
+    # Layer 1: The True Manifold (Green)
+    fig2.add_trace(
+        go.Scattermapbox(
+            lat=owl_lat,
+            lon=owl_lon,
+            mode="markers",
+            marker=go.scattermapbox.Marker(
+                size=6, color="rgb(46, 139, 87)", opacity=0.4
+            ),
+            name="True Owl Trajectory",
+            hovertext=owl_name,
+        )
+    )
+
+    # Layer 2: The Noisy 'Lost' Points (Red)
+    fig2.add_trace(
+        go.Scattermapbox(
+            lat=noisy_coords2[1, :],
+            lon=noisy_coords2[0, :],
+            mode="markers",
+            marker=go.scattermapbox.Marker(
+                size=5, color="rgb(220, 20, 60)", opacity=0.8
+            ),
+            name="Noisy GPS Data",
+        )
+    )
+
+    # Layer 3: The Denoising Flow (Lines)
+    # Safely loop only over the number of points we *actually* sampled
+    actual_lines = noisy_coords2.shape[1]
+
+    for _i in range(actual_lines):
+        fig2.add_trace(
+            go.Scattermapbox(
+                lat=[step[_i] for step in trajectories_lat2],
+                lon=[step[_i] for step in trajectories_lon2],
+                mode="lines",
+                line=dict(width=1, color="rgba(100, 149, 237, 0.5)"),
+                showlegend=False,
+                hoverinfo="skip",
+            )
+        )
+
+    # Add a dummy trace for the legend of the lines
+    fig2.add_trace(
+        go.Scattermapbox(
+            lat=[None],
+            lon=[None],
+            mode="lines",
+            line=dict(width=2, color="rgba(100, 149, 237, 1.0)"),
+            name="Gradient Flow Path",
+        )
+    )
+
+    # Update Mapbox layout using an open-source style
+    fig2.update_layout(
+        mapbox_style="open-street-map",
+        mapbox_zoom=12,
+        mapbox_center={
+            "lat": df_sampledown["location-lat"].mean(),
+            "lon": df_sampledown["location-long"].mean(),
+        },
+        margin={"r": 0, "t": 0, "l": 0, "b": 0},
+        height=600,
+        legend=dict(
+            yanchor="top",
+            y=0.99,
+            xanchor="left",
+            x=0.01,
+            bgcolor="rgba(255,255,255,0.8)",
+        ),
+    )
+
+
+    desc2 = mo.md(
+        # 6.
+        """
+        ### Plotting real (e.g. "probably noisy") data: Owls 
+        Instructions: 1) Select an owl name
+        2) adjust GPS Noise/Flow/Attract
+        3) See how blue line trajectories always cluster at "home"
+
+    Observe how when adding GPS noise the owl locations are broad; with flow steps and attractors the "blue lines" show we can always find the likely home for that dataset.
+        """
+    )
+    mo.vstack([desc2, ui_panel2, fig2, filtered])
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ### 🧪 Why this validates the paper/Applications of the paper:
+
+    Even more than the squirrel data (which is mostly human reported, not noise-polluted GPS data)  the blue lines curve and bend more significantly, especially when comparing individual owls. Because the score function is evaluated continuously based on the topology of the density estimate (the true squirrels), the noise naturally resolves itself. The unconditioned gradient flow still maps them back perfectly to the rigid, rectangular shape of Central Park.
+    """)
+    return
+
+
+@app.cell
+def _():
+    return
+
+
+if __name__ == "__main__":
+    app.run()
+</file>
+
+<file path="owl-squirrel/pyproject.toml">
+# Template for pyproject.toml
+# Variables: dependencies
+
+[project]
+dependencies = [
+"marimo[recommended,lsp]==0.23.0",
+"altair>=5.0.0",
+"anthropic>=0.67.0",
+"anywidget>=0.9.18",
+"attrs>=25.3.0",
+"beautifulsoup4>=4.13.4",
+"bokeh>=3.7.3",
+"certifi>=2026.1.4",
+"chromadb>=1.0.0",
+"click>=8.0.0",
+"comm>=0.2.0",
+"cvxpy>=1.5.0",
+"datasets>=4.0.0",
+"docutils>=0.18.0",
+"duckdb>=1.0.0",
+"geopandas>=1.0.0",
+"google-genai>=1.37.0",
+"huggingface-hub>=0.34.0",
+"ipython>=9.0.0",
+"ipywidgets>=8.0.0",
+"itsdangerous>=2.0.0",
+"jax>=0.6.2",
+"jedi>=0.18.0",
+"Jinja2>=3.1.6",
+"lancedb>=0.20.0",
+"loro>=1.0.0",
+"lxml>=5.4.0",
+"markdown>=3.4.0",
+"MarkupSafe>=3.0.2",
+"matplotlib>=3.8",
+"matplotlib-inline>=0.2.0",
+"multitasking>=0.0.12",
+"narwhals>=2.0.0",
+"nbconvert[webpdf]>=7.0.0",
+"nltk>=3.9.1",
+"numpy>=2.0",
+"openai>=1.107.3",
+"opencv-python>=4.12.0.88",
+"openpipe-art>=0.5.7",
+"openpyxl>=3.1.5",
+"packaging>=21.0",
+"pandas>=2.0",
+"pillow>=11.0.0",
+"plotly>=6.0.0",
+"plotnine>=0.14.5",
+"polars>=1.25",
+"psutil>=7.0.0",
+"pyarrow>=18.1.0",
+"pydantic>=2.11.7",
+"pygments>=2.15.0",
+"pymc>=5.25.1",
+"pymde>=0.3.0",
+"pymdown-extensions>=10.0.0",
+"pyproj>=3.7.2",
+"pyspark>=4.0.0",
+"pytest>=8.4.1",
+"python-lsp-ruff>=2.0.0",
+"python-lsp-server>=1.10.0",
+"PyYAML>=6.0.2",
+"requests>=2.32.3",
+"ruff>=0.15.8",
+"scikit-image>=0.25.2",
+"scikit-learn>=1.6.0",
+"scipy>=1.16.1",
+"seaborn>=0.13.2",
+"sentence-transformers>=5.0.0",
+"spacy>=3.7.5",
+"sqlglot>=27.0.0",
+"starlette>=0.40.0",
+"sympy>=1.13.1",
+"tensorflow-datasets>=4.9.9",
+"tensorflow>=2.20.0",
+"tf_keras>=2.20.0",
+"tokenizers>=0.21.4",
+"tomlkit>=0.12.0",
+"torch>=2.7.1",
+"tqdm>=4.67.1",
+"traitlets>=5.9.0",
+"transformers>=4.48.0",
+"ty>=0.0.27",
+"typing-extensions>=4.0.0",
+"umap-learn>=0.5.8",
+"urllib3>=2.5.0",
+"uvicorn>=0.30.0",
+"vega-datasets==0.9.0",
+"wandb>=0.22.2",
+"weave>=0.52.11",
+"websockets>=15.0.0",
+"xarray>=2025.1.0",
+"xgboost>=3.0.0",
+"yfinance>=0.2.65"
+]
+
+name = "marimo-kernel"
+requires-python = ">=3.12"
+version = "0.1.0"
+
+[tool.marimo.package_management]
+manager = "uv"
+
+[tool.uv]
+index-url = "https://pypi.org/simple"
+
+[tool.marimo.runtime]
+auto_instantiate = true
+
+[tool.marimo.ai.open_ai_compatible]
+api_key = "unused"
+base_url = "https://ai.marimo.app/molab/v1"
+
+[tool.marimo.ai.wandb]
+api_key = "unused"
+base_url = "https://ai.marimo.app/wandb/v1"
+</file>
+
+<file path="README.md">
+# marimo Notebook Competition Entries
+
+Interactive notebooks exploring research papers through [marimo](https://marimo.io), submitted to the [alphaXiv × marimo Notebook Competition](https://marimo.io/pages/events/notebook-competition).
+
+Each notebook takes a core research contribution and brings it to life with code, visualizations, and interactive UI elements—making complex mathematical concepts intuitive and reproducible.
+
+ 📈 Top 5 Files by Token Count:
+│ ──────────────────────────────
+│ 1.  owl-squirrel/Barn Owl Breeding Napa Valley, California(1).csv (2,782,027 tokens, 7,295,273 chars, 88.3%)
+│ 2.  owl-squirrel/nyc_squirrels.csv (350,567 tokens, 814,635 chars, 11.1%)
+│ 3.  barista/notebook.py (8,673 tokens, 31,879 chars, 0.3%)
+│ 4.  owl-squirrel/notebook.py (5,603 tokens, 21,884 chars, 0.2%)
+│ 5.  README.md (1,191 tokens, 5,167 chars, 0%)
+
+---
+
+## 📚 Notebooks
+
+### 1. ☕ **Cafe Diffusion: The Blind Barista Challenge**  
+📁 `barista/`
+
+**Paper:** [arXiv:2602.18428 — The Geometry of Noise: Why Diffusion Models Don't Need Noise Conditioning](https://arxiv.org/abs/2602.18428)
+
+A playful, interactive exploration of a fundamental insight in diffusion models: **the model doesn't actually need to know how much noise was added**. 
+
+Instead of manual tuning, the geometry of the data distribution creates a natural "energy attractor"—a vector field that automatically guides noisy data back to the true manifold.
+
+**The Challenge:** A rogue espresso machine has scrambled your latte art with an unknown amount of noise. Use two tools:
+- **The Old Method** — Manually tune a radio dial to guess the noise level (σ). Get it wrong? The Jensen Gap Singularity kicks in and the image degrades further.
+- **The New Method** — Follow the geometric gradient field automatically, without knowing the noise level. Watch it succeed consistently.
+
+Your job: **Guess the secret shape in the latte art.**
+
+**Key Features:**
+- Interactive noise injection and denoising
+- Side-by-side comparison of traditional vs. geometric methods  
+- Real-time visualization of the manifold geometry
+- Slide and vertical layout support
+
+**Technologies:** marimo, Plotly, NumPy, Vegafusion
+
+---
+
+### 2. 🐿️ **The Geometry of Noise: Habitat Recovery**  
+📁 `owl-squirrel/`
+
+**Paper:** [arXiv:2602.18428 — The Geometry of Noise: Why Diffusion Models Don't Need Noise Conditioning](https://arxiv.org/abs/2602.18428)
+
+A geographic proof-of-concept that translates the paper's N-dimensional mathematics into real-world 2D data recovery.
+
+**Experiment 1:** Using the [NYC Squirrel Census](https://www.thesquirrelcensus.com/), we model Central Park as a 2D data manifold. Inject extreme GPS noise across Manhattan. Using purely blind gradient flow (no noise labels), watch the geometry pull squirrels back home to Central Park.
+
+**Experiment 2:** Repeat with [GPS-tracked barn owl breeding locations](https://www.movebank.org/cms/webapp?gwt_fragment=page=studies,path=study1426277950) in Napa, California, affected by wildfires. Again, the manifold recovers the true geographic center despite severe GPS perturbation.
+
+**Why This Matters:**  
+Physical and social science researchers can use this approach to surface likely geographic centers from noisy GPS datasets—improving data triangulation and analysis without relying on noise magnitude labels.
+
+**Key Features:**
+- Fast data ingestion with Polars
+- KDE-based manifold estimation
+- Gradient ascent denoising visualized on interactive maps
+- Real-time noise injection controls
+- Comparison of accuracy before/after recovery
+
+**Datasets:**
+- `nyc_squirrels.csv` — NYC Squirrel Census observations
+- `Barn Owl Breeding Napa Valley, California(1).csv` — Movebank GPS tracking data
+
+**Technologies:** marimo, Polars, Plotly, SciPy (gaussian_kde), NumPy, Vegafusion
+
+---
+
+## 🚀 Running the Notebooks
+
+### Prerequisites
+- Python 3.13+
+- marimo (all dependencies are declared in each notebook)
+
+### Launch Locally
+```bash
+cd barista
+marimo run notebook.py
+```
+
+```bash
+cd owl-squirrel
+marimo run notebook.py
+```
+
+### View on molab
+Deploy directly to [molab](https://molab.marimo.io) for interactive, cloud-hosted viewing without local setup.
+
+---
+
+## 📖 About the Paper
+
+Both notebooks are inspired by **"The Geometry of Noise: Why Diffusion Models Don't Need Noise Conditioning"** ([arXiv:2602.18428](https://arxiv.org/abs/2602.18428)).
+
+**Core Insight:** Traditional diffusion models require an explicit noise level input (σ) during the denoising process. The paper proves this is mathematically unnecessary. The true data manifold creates a natural gradient field (score field) that pulls noisy points back toward high-density regions, regardless of noise magnitude. This is both theoretically elegant and practically powerful.
+
+---
+
+## 🎯 Competition Goals
+
+These notebooks aim to:
+1. ✅ Provide **intuitive understanding** through code, UI, and interactive visualizations
+2. ✅ Implement the **core mathematical insight** in accessible, reproducible form
+3. ✅ Add **novel extensions** — applying abstract theory to real geographic datasets
+4. ✅ Make the concepts **hands-on and exploratory** — users don't just read, they experiment
+
+---
+
+## 📝 License
+
+These notebooks are part of a research education competition and are provided as-is for learning and exploration purposes.
+
+---
+
+## 💡 Further Reading
+
+- **marimo Docs:** [marimo.io](https://marimo.io)
+- **alphaXiv:** [alphaxiv.org](https://alphaxiv.org)
+- **NYC Squirrel Census:** [thesquirrelcensus.com](https://www.thesquirrelcensus.com/)
+- **Movebank (GPS Tracking):** [movebank.org](https://www.movebank.org/)
+</file>
+
+</files>
