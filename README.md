@@ -4,7 +4,7 @@
 Submitted to the [alphaXiv × marimo Notebook Competition](https://marimo.io/pages/events/notebook-competition).
 
 **Author:** Leo Postovoit | [@postphotos](https://github.com/postphotos) | [leopostovoit.com](https://leopostovoit.com/)  
-I'm a strategic product leader and technologist specializing in developing intuitive tools that bridge the gap between human needs, historical data, and ecological systems. My foundation in journalism and anthropology deeply informs my product philosophy. I've led strategic initiatives for enterprise clients including Google and Automattic, and built specialized solutions alongside legendary publications like the Wall Street Journal, San Francisco Chronicle, and Lowrider Magazine.
+> I'm a strategic product leader and technologist specializing in developing intuitive tools that bridge the gap between human needs, historical data, and ecological systems. My foundation in journalism and anthropology deeply informs my product philosophy. I've led strategic initiatives for enterprise clients including Google and Automattic, and built specialized solutions alongside legendary publications like the Wall Street Journal, San Francisco Chronicle, and Lowrider Magazine.
 
 ---
 
@@ -13,23 +13,24 @@ I built this project to explore how theoretical AI research can be translated in
 
 ### About my motivation to apply the paper to real data
 
-Historically, if a dataset was heavily corrupted by a storm or a bad sensor, ecologists had to throw it out or spend months manually correcting it. This new mathematical approach proves that "junky" or noisy data is completely fine to use. The algorithm simply looks at the overall "shape" (geometry) of all the scattered data points and naturally triangulates the true center. This suggests a future where real-time tracking during environmental disasters, guided by strong data practices, can reduce the reliance on manual data cleaning to determine the central tendency and true spatial distribution of the dataset.
-
-This means we can spend less time agonizing over:
-- a scrambled lat-long ping from a damaged GPS collar, or:
-- a typo in a crowdsourced field form, 
-
-and more time focusing on what actually matters: 
-- applying these insights to direct emergency interventions, 
-- protecting vulnerable habitats, 
-- and translating raw information into real-world impact. 
-
-That said, this isn't an excuse to intentionally collect bad data. It's simply an acknowledgment that imperfect data still has a story to tell, and with the right mathematical lens, that story will reveal itself. Even somewhat junky data—when collected at scale—holds vital insights. You just have to find the right way to squeeze the juice (and make sense of it all!)
+> Historically, if a dataset was heavily corrupted by a storm or a bad sensor, ecologists had to throw it out or spend months manually correcting it. This new mathematical approach proves that "junky" or noisy data is completely fine to use. 
+> The algorithm simply looks at the overall "shape" (geometry) of all the scattered data points and naturally triangulates the true center. This suggests a future where real-time tracking during environmental disasters, guided by strong data practices, can reduce the reliance on manual data cleaning to determine the central tendency and true spatial distribution of the dataset.
+>
+> This means we can spend less time agonizing over:
+> - a scrambled lat-long ping from a damaged GPS collar, or:
+> - a typo in a crowdsourced field form, 
+> 
+> and more time focusing on what actually matters: 
+> - applying these insights to direct emergency interventions, 
+> - protecting vulnerable habitats, 
+> - and translating raw information into real-world impact. 
+>
+> That said, this isn't an excuse to intentionally collect bad data. It's simply an acknowledgment that imperfect data still has a story to tell, and with the right mathematical lens, that story will reveal itself. Even somewhat junky data—when collected at scale—holds vital insights. You just have to find the right way to squeeze the juice (and make sense of it all!)
 
 ### Here is how I broke it down:
-1. Playful exploration: I first applied the math to a theoretical concept (a barista "latte art" game) to visually explain the paper's thesis and show why unknown noise isn't a big deal.
-2. Grounded data: I then applied the concept to a small, controlled dataset (NYC squirrels) to demonstrate exactly how the gradient math naturally clusters scattered points back together.
-3. Real application: Finally, I applied it to a larger, inherently noisy ecological dataset (GPS tracking of Napa Valley owls) to show the actual relevance of this math for fields like wildlife conservation.
+1. **Playful exploration:** I first applied the math to a theoretical concept (a barista "latte art" game) to visually explain the paper's thesis and show why unknown noise isn't a big deal.
+2. **Grounded data:** I then applied the concept to a small, controlled dataset (NYC squirrels) to demonstrate exactly how the gradient math naturally clusters scattered points back together.
+3. **Real application:** Finally, I applied it to a larger, inherently noisy ecological dataset (GPS tracking of Napa Valley owls) to show the actual relevance of this math for fields like wildlife conservation.
 
 ---
 
