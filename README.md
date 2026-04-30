@@ -9,7 +9,7 @@ Submitted to the [alphaXiv × marimo Notebook Competition](https://marimo.io/pag
 ---
 
 ## 🧭 Project Process
-I built this project to explore how theoretical AI research can be translated into practical, real-world tools. After reading through the paper *The Geometry of Noise*, I took its core mathematical concept—that diffusion models don't actually need to know the magnitude of noise to reverse it—and built interactive examples to test it. 
+I built this project to explore how theoretical AI research can be translated into practical, real-world tools. After reading through the paper [*The Geometry of Noise*](https://www.alphaxiv.org/abs/2602.18428), I took its core mathematical concept—that diffusion models don't actually need to know the magnitude of noise to reverse it—and built interactive examples to test it. 
 
 ### About my motivation to apply the paper to real data
 
